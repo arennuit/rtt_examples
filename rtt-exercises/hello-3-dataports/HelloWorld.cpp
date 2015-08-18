@@ -115,8 +115,23 @@ namespace Example
             this->ports()->addPort( input ).doc("Data consuming port.");
         }
 
+        bool configureHook()
+        {
+            if (!input.connected())
+                return false;
+
+            return true;
+        }
+
         void updateHook()
         {
+            double result = 0.0;
+            while (input.read(result) == NewData)
+            {
+                double mult = 3.0 * result;
+                output.write(mult);
+                log(Info) << mult << endlog();
+            }
         }
     };
 

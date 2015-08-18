@@ -1,7 +1,10 @@
 // Start this script by using:
 // deployer-gnulinux -s start.ops -linfo
 
-import("hello-3-dataports")
+import("rtt_ros");
+ros.import("hello-3-dataports")
+
+displayComponentTypes(); // Function of the DeploymentComponent
 
 loadComponent("hello","Example::Hello")
 loadComponent("world","Example::World")
@@ -9,7 +12,7 @@ loadComponent("world","Example::World")
 var double period = 0.5
 var int priority  = 0
 setActivity("hello", period, priority , ORO_SCHED_OTHER )
-setActivity("world", period, priority , ORO_SCHED_OTHER )
+setActivity("world", 0.1, priority , ORO_SCHED_OTHER )
 
 // Exercise: Create a ConnPolicy variable and fill in the
 // 'type', 'size' and 'lock_policy' fields to create a locked
