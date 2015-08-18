@@ -18,6 +18,8 @@
 #include <rtt/Attribute.hpp>
 #include <rtt/Component.hpp>
 
+#include <rtt/marsh/Marshalling.hpp>
+
 using namespace std;
 using namespace RTT;
 
@@ -110,6 +112,9 @@ namespace Example
 
             this->addAttribute("attribute", attribute);
             this->addConstant("constant", constant);
+
+            // Load marshalling service.
+            this->getProvider<Marshalling>("marshalling");
         }
     };
 }
