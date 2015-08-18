@@ -60,11 +60,24 @@ namespace Example
 
         void updateHook()
         {
-        	log(Info) << "Update !" <<endlog();
+        	log(Info) << "Update !" << endlog();
         }
         bool configureHook()
         {
+            log(Info) << "configureHook()" << endlog();
+
+            setPeriod(0.5);
         	return true;
+        }
+        bool startHook()
+        {
+            log(Info) << "startHook()" << endlog();
+
+            double period = getPeriod();
+            if (period != 0.5)
+                return false;
+
+            return true;
         }
     };
 }
