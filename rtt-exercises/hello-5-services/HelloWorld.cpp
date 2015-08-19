@@ -53,27 +53,35 @@ using namespace Orocos;
  */
 namespace Example
 {
+    class RobotService : public RTT::Service
+    {
+    protected:
+         /**
+         * Returns a string.
+         */
+        string mymethod() {
+            return "Hello World";
+        }
+    public:
+        RobotService(const std::string& name, TaskContext* owner) : RTT::Service(name, owner)
+        {
+            addOperation("mymethod", &RobotService::mymethod, this).doc("Returns a friendly word.");
+        }
+    };
 
-	/**
+    /**
      * Every component inherits from the 'TaskContext' class.  This base
      * class allow a user to add a primitive to the interface and contain
      * an ExecutionEngine which executes application code.
      */
     class Hello
-        : public TaskContext
+        : public TaskContext, public RobotService
     {
     protected:
         /**
          * @name Operations
          * @{
          */
-        /**
-         * Returns a string.
-         */
-        string mymethod() {
-            return "Hello World";
-        }
-
         bool sayIt(string sentence, string& answer) {
             log(Info) <<"  Saying: Hello " << sentence << "!" <<endlog();
             if (sentence == "Orocos") {
@@ -90,10 +98,11 @@ namespace Example
          * of the component.
          */
         Hello(std::string name)
-            : TaskContext(name)
+            : TaskContext(name),
+              RobotService("robot", this)
         {
-            this->provides("robot")->addOperation("mymethod", &Hello::mymethod, this).doc("Returns a friendly word.");
-            this->provides("robot")->addOperation("sayIt", &Hello::sayIt, this).doc("Returns a friendly answer.")
+            this->TaskContext::provides()->addService(boost::shared_ptr<RTT::Service>(this));
+            this->TaskContext::provides("robot")->addOperation("sayIt", &Hello::sayIt, this).doc("Returns a friendly answer.")
                     .arg("sentence", "That's what I'll say.")
                     .arg("answer", "That's the answer you'll get if you let me say the right thing.");
         }
@@ -105,39 +114,39 @@ namespace Example
      * of the Hello component.
      */
     class World
-		: public TaskContext
+        : public TaskContext
     {
     protected:
-    	/**
-    	 * This method object serves to store the
-    	 * call to the Hello component.
-    	 * It is best practice to have this object as
-    	 * a member variable of your class.
-    	 */
-    	OperationCaller< string(void) > mymethod;
+        /**
+         * This method object serves to store the
+         * call to the Hello component.
+         * It is best practice to have this object as
+         * a member variable of your class.
+         */
+        OperationCaller< string(void) > mymethod;
 
         OperationCaller< bool(string, string&) > sayIt;
-    	/** @} */
+        /** @} */
 
     public:
-    	World(std::string name)
-			: TaskContext(name, PreOperational),
-			  mymethod("mymethod"), sayIt("sayIt")
-    	{
-    	    this->requires("robot")->addOperationCaller(mymethod);
-    	    this->requires("robot")->addOperationCaller(sayIt);
-    	}
+        World(std::string name)
+            : TaskContext(name, PreOperational),
+              mymethod("mymethod"), sayIt("sayIt")
+        {
+            this->requires("robot")->addOperationCaller(mymethod);
+            this->requires("robot")->addOperationCaller(sayIt);
+        }
 
-    	bool configureHook() {
-    	    // Check for the service being ready here and if not, connect to the provided service
-    	    // from peer 'Hello'.
-    	    return requires("robot")->connectTo( getPeer("Hello")->provides("robot"));
-    	}
+        bool configureHook() {
+            // Check for the service being ready here and if not, connect to the provided service
+            // from peer 'Hello'.
+            return requires("robot")->connectTo( getPeer("Hello")->provides("robot"));
+        }
 
-    	void updateHook() {
-    		log(Info) << "Receiving from 'Hello': " << mymethod() <<endlog();
+        void updateHook() {
+            log(Info) << "Receiving from 'Hello': " << mymethod() <<endlog();
             // Log the results of sayIt here too.
-    	}
+        }
     };
 }
 
