@@ -2,7 +2,10 @@
 // deployer-gnulinux -s start.ops -linfo
 
 // For ROS builds, we could also import using the package name.
-import("hello-4-operations")
+import("rtt_ros");
+ros.import("hello-4-operations")
+
+displayComponentTypes(); // Function of the DeploymentComponent
 
 loadComponent("hello","Example::Hello")
 loadComponent("world","Example::World")
@@ -14,4 +17,35 @@ setActivity("world", period, LowestPriority , ORO_SCHED_OTHER )
 connectPeers("hello","world")
 
 hello.configure()
-hello.start()
+//hello.start()
+
+ // Solution:
+
+ // We need to require "print" on the top level, not in the program
+ // A program is parsed and then executed, so a plugin/service-loading would
+ // not happen until the program gets executed ( using start() below ).
+require("print")
+
+ // Set the Deployer's period to 0.1 such that it can execute scripts:
+setPeriod(0.1)
+
+program OperationExample 
+{
+	print.log(Info, "Laurène je t'aime mmême si c'est parfois un peu dur.")
+
+	var string string_result
+	var bool result = false;
+
+	var SendHandle sh;
+	hello.sayIt("orocos",string_result)
+	sh = hello.sayIt.send("orocos",string_result)
+	sh.collect(result, string_result)
+
+	if (result == true ) then {
+	      print.log(Info, "The result of sayIt was: " + string_result )
+	}
+}
+
+
+ // Execute the program in the Deployer:
+OperationExample.start()

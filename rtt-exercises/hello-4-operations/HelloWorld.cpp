@@ -63,6 +63,19 @@ namespace Example
         string getMessage() {
             return "Hello World";
         }
+
+        bool sayIt(string sentence, string& answer)
+        {
+            bool retVal = false;
+            if (sentence == "orocos")
+            {
+                answer = "Hello Friend";
+                retVal = true;
+            }
+
+            log(Info) << sentence << endlog();
+            return retVal;
+        }
         /** @} */
 
     public:
@@ -74,6 +87,8 @@ namespace Example
             : TaskContext(name)
         {
             this->addOperation("getMessage", &Hello::getMessage, this).doc("Returns a friendly word.");
+
+            this->addOperation("sayIt", &Hello::sayIt, this, RTT::OwnThread).doc("sayIt operation").arg("sentence", "sentence doc").arg("answer", "answer doc");
         }
 
     };
@@ -113,7 +128,7 @@ namespace Example
 
     	    // It is best practice to lookup methods of peers in
     	    // your configureHook.
-    	    getMessage = peer->getOperation("getmessage");
+    	    getMessage = peer->getOperation("getMessage");
     	    if ( !getMessage.ready() ) {
     	    	log(Error) << "Could not find Hello.getMessage Operation!"<<endlog();
     	    	return false;
