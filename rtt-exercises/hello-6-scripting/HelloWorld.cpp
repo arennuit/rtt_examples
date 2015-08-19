@@ -136,7 +136,8 @@ namespace Example
 			: TaskContext(name, PreOperational),
 			  input("input"),output("output")
     	{
-    	    // Exercise: Add input and output as ports, but add input as an event generating port.
+            ports()->addEventPort("input", input).doc("World input port, event awakening.");
+            ports()->addPort("output", output).doc("World output port.");
     	}
     };
 }

@@ -2,7 +2,8 @@
 // deployer-gnulinux -s start.ops -linfo
 
 // For ROS builds, we could also import using the package name.
-import("hello-6-scripting")
+import("rtt_ros");
+ros.import("hello-6-scripting")
 
 loadComponent("hello","Example::Hello")
 loadComponent("world","Example::World")
