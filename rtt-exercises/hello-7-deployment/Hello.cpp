@@ -137,3 +137,5 @@ namespace Example
  * for inspiration.
  */
 
+#include <rtt/Component.hpp>
+ORO_CREATE_COMPONENT( Example::Hello );
