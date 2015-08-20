@@ -14,4 +14,17 @@
   </struct>
   <simple name="SnapshotOnly" type="boolean"><description>Set to true to only log data if a snapshot() was done.</description><value>0</value></simple>
   <simple name="NullSample" type="string"><description>The characters written to the log to indicate that no new data was available for that port during a snapshot(). As a special value, the string 'last' is interpreted as repeating the last value.</description><value>-</value></simple>
+  <simple name="Snapshot" type="boolean"><description>Set to true to enable snapshot mode. This will cause a non-periodic reporter to only report data upon the snapshot() operation.</description><value>0</value></simple>
+  <struct name="ReportPolicy" type="ConnPolicy">
+     <description>The ConnPolicy for the reporter's port connections.</description>
+     <simple name="type" type="long"><description>Part</description><value>0</value></simple>
+     <simple name="init" type="boolean"><description>Part</description><value>1</value></simple>
+     <simple name="lock_policy" type="long"><description>Part</description><value>2</value></simple>
+     <simple name="pull" type="boolean"><description>Part</description><value>0</value></simple>
+     <simple name="size" type="long"><description>Part</description><value>0</value></simple>
+     <simple name="transport" type="long"><description>Part</description><value>0</value></simple>
+     <simple name="data_size" type="long"><description>Part</description><value>0</value></simple>
+     <simple name="name_id" type="string"><description>Part</description><value></value></simple>
+  </struct>
+  <simple name="ReportOnlyNewData" type="boolean"><description>Turn on in order to only write out NewData on ports and omit unchanged ports. Turn off in order to sample and write out all ports (even old data).</description><value>0</value></simple>
 </properties>

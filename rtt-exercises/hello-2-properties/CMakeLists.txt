@@ -11,7 +11,12 @@ catkin_package(
 add_definitions(-DRTT_COMPONENT)
 # Creates an orocos component HelloWorld
 orocos_component(${PROJECT_NAME} HelloWorld.cpp) # ...you may add multiple source files
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+target_link_libraries(
+	${PROJECT_NAME}
+	${catkin_LIBRARIES}
+	${OROCOS-RTT_RTT-MARSHALLING_LIBRARY} 
+	${USE_OROCOS_LIBRARIES}
+	)
 
 # Makes this an installable/usable package for other packages.
 orocos_generate_package()
